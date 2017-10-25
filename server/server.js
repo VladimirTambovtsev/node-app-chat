@@ -15,10 +15,20 @@ app.use(express.static(publicPath)); // add index static files
 io.on('connection', (socket) => {
 	console.log("new user connected");
 
+	 socket.emit('newMessage', {
+	 	from: "Vlad",
+	 	to: "Andrew",
+	 	text: "Cool, I find new stuff"
+	 });
+
+	socket.on('createMessage', (message) => {
+		console.log('Message:message', message);
+	});
+
+
 	socket.on('disconnect', () => {
 		console.log("user was disconnected");
 	});
-
 
 });
  
