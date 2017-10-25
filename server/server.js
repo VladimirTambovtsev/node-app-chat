@@ -15,6 +15,18 @@ app.use(express.static(publicPath)); // add index static files
 io.on('connection', (socket) => {
 	console.log("new user connected");
 
+	socket.emit('newMessage', {
+		from: "Admin",
+		text: "Welcome to the chat app"
+	})
+
+	// get event all except one
+	socket.broadcast.emit('newMessage', {
+		from: "Admin",
+		text: "New user joined",
+		createdAt: new Date().getTime()
+	})
+
 	socket.on('createMessage', (message) => {
 		console.log('Message:message', message);
 		io.emit('newMessage', {
@@ -22,6 +34,12 @@ io.on('connection', (socket) => {
 			text: message.text,
 			createdAt: new Date().getTime()
 		})
+		/*
+		socket.broadcast.emit('newMessage', {
+			from: message.from,
+			text: message.text,
+			createdAt: new Date().getTime()
+		}) */
 	});
 
 
