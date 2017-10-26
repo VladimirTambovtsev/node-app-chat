@@ -3,21 +3,30 @@
 <head>
 	<meta charset="utf-8">
 	<title>Hey</title>
+	<link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
-<body>
-	<h1>Hey there</h1>
-	<p>This is chat app</p>
+<body class="chat">
+	 
+		<div class="chat__sidebar">
+			<h3>People</h3>
+			<div id="users"></div>
+		</div>
 	
-	<ol id="messages"></ol>
-
-	<form id="message-form">
-		<input type="text" name="message" placeholder="Message.." />
-		<button>Submit</button>
-	</form>
-	<button id="send-location">Send location</button>
-
+		<div class="chat__main">
+			<ol id="messages" class="chat__messages"></ol>
+			 
+			<div class="chat__footer" >
+				<form id="message-form">
+					<input type="text" name="message" placeholder="Message.." autofocus require autocomplete="off" />
+					<button>Submit</button>
+				</form>
+				<button id="send-location">Send location</button>
+			</div>
+		</div>
+	 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="/js/libs/moment.js"></script>
 <script src="/js/index.js"></script>
 </body>
 </html>
