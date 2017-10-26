@@ -1,25 +1,37 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
-const socket = require('socket.io');
-
+const socketIO = require('socket.io');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-var publicPath = path.join(__dirname, '../public') // just go to public directory
-const port = process.env.PORT || 3000; // Heroku or Localhost deployemnt
-
+const {isRealString} = require('./utils/validation');
+const publicPath = path.join(__dirname, '../public');
+const port = process.env.PORT || 3000;
 var app = express();
-var server = http.createServer(app); // create server for sockets
-var io = socket(server); // add socket
+var server = http.createServer(app);
+var io = socketIO(server);
 
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+  socket.on('join', (params, callback) => {
+    if (!isRealString(params.name) || !isRealString(params.room)) {
+      callback('Name and room name are required.');
+    }
 
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
+    socket.join(params.room);
+    // socket.leave('The Office Fans');
+
+    // io.emit -> io.to('The Office Fans').emit
+    // socket.broadcast.emit -> socket.broadcast.to('The Office Fans').emit
+    // socket.emit
+
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+    socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`));
+    callback();
+  });
 
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
